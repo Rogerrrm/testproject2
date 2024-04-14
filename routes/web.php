@@ -28,6 +28,8 @@ Route::get('/adminpanel', function () {
 
 Route::get('/getusersession', [UserController::class, 'getUserSession']);
 Route::get('/buscarusuarios', [UserController::class, 'getUsers']);
+Route::post('/usuarios/{id}', [UserController::class, 'actualizar']);
+Route::delete('/usuarios/{id}', [UserController::class, 'eliminar']);
 
 
 Route::get('/dashboard', function () {
