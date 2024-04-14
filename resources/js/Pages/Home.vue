@@ -1,9 +1,47 @@
+<script setup>
+import navbar from "@/Components/Navbar.vue";
+import { Carousel } from "flowbite";
+import { ref, defineProps, onMounted } from 'vue';
+
+
+const Usuarios = ref();
+
+axios.get('/buscarusuarios')
+    .then(response => {
+        Usuarios.value = response.data;
+        console.log("Datos de Usuarios:", Usuarios.value);
+    })
+    .catch(error => {
+        console.error('Error al obtener las Usuarios:', error);
+    });
+
+
+
+const props = defineProps({
+    usuarios: Array
+});
+
+onMounted(() => {
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .catch(error => {
+            console.error(error);
+        });
+});
+</script>
+
 <template>
     <div>
         <navbar></navbar>
 
-        <p class="bg-blue-300">Hola</p>
+        <textarea
+            class="ckeditor-textarea border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+            name="content" id="editor" placeholder="Escribe aquí..."
+            style="min-height: 200px; width: 200px;"></textarea>
+
+        <p class="bg-blue-300">Bienvenido</p>
         <AdminPanel :usuarios="Usuarios" />
+        <br>
 
 
         <div id="default-carousel" class="relative w-full" data-carousel="slide">
@@ -79,19 +117,33 @@
     </div>
 </template>
 
+<!-- <template>
+    <Navbar></navbar>
+    holaaaaaaaaa
+    <div>
+        <div v-for="usuario in usuarios" :key="usuario.id">
+            {{ usuario.nombre }}
+        </div>
+    </div>
+
+  
+
+</template> 
+
 <script setup>
-import navbar from "@/Components/Navbar.vue";
-import { Carousel } from "flowbite";
-import { ref } from "vue";
+import { ref, defineProps, onMounted } from 'vue';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import Navbar from '@/Components/Navbar.vue';
 
-const Usuarios = ref();
+const props = defineProps({
+    usuarios: Array
+});
 
-axios.get('/buscarusuarios')
-    .then(response => {
-        Usuarios.value = response.data;
-        console.log("Datos de Usuarios:", Usuarios.value);
-    })
-    .catch(error => {
-        console.error('Error al obtener las Usuarios:', error);
-    });
-</script>
+onMounted(() => {
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .catch(error => {
+            console.error(error);
+        });
+});
+</script> -->
