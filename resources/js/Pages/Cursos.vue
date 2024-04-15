@@ -10,6 +10,7 @@ import editor from '@/Components/editor.vue'
 import formcursos from '@/Components/formcursos.vue';
 import APcursos from '@/Components/APcursos.vue';
 import formrecursos from '@/Components/formrecursos.vue';
+import APrecursos from '@/Components/APrecursos.vue';
 
 const isSidebarOpen = ref(true);
 
@@ -19,24 +20,47 @@ function toggleSidebar() {
 }
 
 let users_ = ref(false)
-let informes_ = ref(true)
+let informes_ = ref(false)
 let categorias_ = ref(false);
+let recursos_ = ref(false);
+let recursosgrupos_ = ref(true);
 
 function users() {
     users_.value = true;
     informes_.value = false;
     categorias_.value = false;
+    recursos_ = false;
+    recursosgrupos_ = false;
 }
 function informes() {
     informes_.value = true;
     users_.value = false;
     categorias_.value = false;
+    recursos_ = false;
+    recursosgrupos_ = false;
 }
 function categorias() {
     categorias_.value = true;
     informes_.value = false;
     users_.value = false;
+    recursos_ = false;
+    recursosgrupos_ = false;
 }
+function recursos() {
+    categorias_.value = false;
+    informes_.value = false;
+    users_.value = false;
+    recursos_ = true;
+    recursosgrupos_ = false;
+}
+function recursosgrupos() {
+    categorias_.value = false;
+    informes_.value = false;
+    users_.value = false;
+    recursos_ = false;
+    recursosgrupos_ = true;
+}
+
 const Usuarios = ref();
 
 axios.get('/buscarusuarios')
@@ -58,6 +82,40 @@ axios.get('/buscarcursos')
     .catch(error => {
         console.error('Error al obtener las Cursos:', error);
     });
+
+const Recursos = ref();
+
+axios.get('/buscarrecursos')
+    .then(response => {
+        Recursos.value = response.data;
+        console.log("Datos de Recursos:", Recursos.value);
+    })
+    .catch(error => {
+        console.error('Error al obtener las Recursos:', error);
+    });
+
+const selectedGrupo = ref(null);
+const recurso = ref([]);
+
+const cargarRecursos = () => {
+    // Verifica si se ha seleccionado un grupo
+    if (selectedGrupo.value) {
+        axios.post('/buscarcursosrecursos', {
+            grupoId: selectedGrupo.value
+        })
+            .then(response => {
+                // Almacena los recursos obtenidos en la variable recursos
+                recurso.value = response.data.recursos;
+                console.log("Recursos obtenidos:", recurso.value);
+            })
+            .catch(error => {
+                // Maneja el error si es necesario
+                console.error(error);
+            });
+    } else {
+        console.log('Por favor, selecciona un grupo antes de cargar los recursos.');
+    }
+};
 
 onMounted(() => {
     ClassicEditor
@@ -98,6 +156,18 @@ onMounted(() => {
 
                         </li>
                     </a>
+                    <li v-on:click="recursosgrupos">
+                        <a href="#"
+                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700 group">
+                            <svg class="flex-shrink-0 w-5 h-5  transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                viewBox="0 0 18 20">
+                                <path
+                                    d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z" />
+                            </svg>
+                            <span class="flex-1 ms-3 whitespace-nowrap ">Grupos y Recursos</span>
+                        </a>
+                    </li>
                     <li v-on:click="informes">
                         <a href="#"
                             class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700 group">
@@ -137,6 +207,18 @@ onMounted(() => {
                             <span class="flex-1 ms-3 whitespace-nowrap ">Recursos</span>
                         </a>
                     </li>
+                    <li v-on:click="recursos">
+                        <a href="#"
+                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700 group">
+                            <svg class="flex-shrink-0 w-5 h-5  transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                viewBox="0 0 18 20">
+                                <path
+                                    d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z" />
+                            </svg>
+                            <span class="flex-1 ms-3 whitespace-nowrap ">Mis Recursos</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
 
@@ -163,10 +245,41 @@ onMounted(() => {
         <!--  -->
 
         <div v-if="categorias_">
-            <formrecursos></formrecursos>
-
-            <!-- <editor></editor> -->
-
+            <div v-for="curso in Cursos" :key="curso.id">
+                <formrecursos :cursos="curso"></formrecursos>
+            </div>
         </div>
+
+        <div v-if="recursos_">
+            <div v-for="recurso in Recursos" :key="recurso.id">
+                <div v-for="recurs in recurso" :key="recurs.id">
+                    <APrecursos :recursos="recurs"></APrecursos>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="recursosgrupos_">
+            Selecciona un curso
+            <div v-for="curso in Cursos" :key="curso.id">
+                <select v-model="selectedGrupo" @change="cargarRecursos">
+                    <option value="">Selecciona un grupo</option>
+                    <option v-for="curs in curso" :key="curs.id" :value="curs.id">{{ curs.nombre }}</option>
+                </select>
+            </div>
+
+            <div>
+                <div v-show="recurso.length > 0">
+                    <div v-for="recurs in recurso" :key="recurs.id">
+                        <br>
+                        <APrecursos :recursos="recurs"></APrecursos>
+                    </div>
+                </div>
+                <div v-show="recurso.length === 0">
+                    No hay recursos disponibles.
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </template>

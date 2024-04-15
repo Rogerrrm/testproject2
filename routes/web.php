@@ -42,7 +42,12 @@ Route::get('/buscarcursos', [CursoController::class, 'buscar']);
 Route::delete('/cursos/{id}', [CursoController::class, 'eliminarCurso']);
 Route::put('/cursos/{id}', [CursoController::class, 'update']);
 
+Route::get('/buscarrecursos', [RecursoController::class, 'buscar']);
 Route::post('/recursos', [RecursoController::class, 'guardar'])->name('recursos.guardar');
+Route::put('/recursos/{id}', [RecursoController::class, 'actualizar']);
+Route::post('/buscarcursosrecursos', [RecursoController::class, 'buscarCursosRecursos']);
+Route::get('/buscarcursosrecurso', [RecursoController::class, 'buscarCursosRecursos']);
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
