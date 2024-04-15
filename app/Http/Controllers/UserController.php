@@ -28,4 +28,36 @@ class UserController extends Controller
         $users = User::all();
         return response()->json($users);
     }
+
+    public function eliminar($id)
+    {
+        // Buscar el usuario por su ID
+        $usuario = User::find($id);
+
+        // Verificar si el usuario existe
+        if ($usuario) {
+            // Eliminar el usuario
+            $usuario->delete();
+            return response()->json(['message' => 'Usuario eliminado exitosamente'], 200);
+        } else {
+            // El usuario no existe
+            return response()->json(['message' => 'Usuario no encontrado'], 404);
+        }
+    }
+
+    public function actualizar(Request $request, $id)
+    {
+        // Buscar el usuario por su ID
+        $usuario = User::find($id);
+
+        // Verificar si el usuario existe
+        if ($usuario) {
+            // Actualizar los datos del usuario
+            $usuario->update($request->all());
+            return response()->json(['message' => 'Usuario actualizado exitosamente'], 200);
+        } else {
+            // El usuario no existe
+            return response()->json(['message' => 'Usuario no encontrado'], 404);
+        }
+    }
 }
