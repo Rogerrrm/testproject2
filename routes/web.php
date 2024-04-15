@@ -49,6 +49,10 @@ Route::post('/buscarcursosrecursos', [RecursoController::class, 'buscarCursosRec
 Route::get('/buscarcursosrecurso', [RecursoController::class, 'buscarCursosRecursos']);
 
 
+Route::get('/curs', [CursoController::class, 'buscar']);
+Route::put('/cursos/{curso}', [CursoController::class, 'update']);
+
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
