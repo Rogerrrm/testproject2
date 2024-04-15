@@ -2,6 +2,12 @@
 import navbar from "@/Components/Navbar.vue";
 import { Carousel } from "flowbite";
 import { ref, defineProps, onMounted } from 'vue';
+import carousel from "@/Components/carousel.vue";
+import cookies from "@/Components/cookies.vue";
+
+const props = defineProps({
+    usuarios: Array
+});
 
 
 const Usuarios = ref();
@@ -15,135 +21,42 @@ axios.get('/buscarusuarios')
         console.error('Error al obtener las Usuarios:', error);
     });
 
+const Cursos = ref();
 
-
-const props = defineProps({
-    usuarios: Array
-});
-
-onMounted(() => {
-    ClassicEditor
-        .create(document.querySelector('#editor'))
-        .catch(error => {
-            console.error(error);
-        });
-});
+axios.get('/buscarcursos')
+    .then(response => {
+        Cursos.value = response.data;
+        console.log("Datos de Cursos:", Cursos.value);
+    })
+    .catch(error => {
+        console.error('Error al obtener las Cursos:', error);
+    });
 </script>
 
 <template>
     <div>
         <navbar></navbar>
+        <div class="text-center">
+            <p class="bg-blue-300 p-2 rounded-lg">¡Bienvenido!</p>
+            <p class="mt-4">Explora un universo de aprendizaje en nuestra institución educativa, donde cada jornada es
+                un viaje hacia el saber y el desarrollo personal.</p>
+        </div>
 
-        <textarea
-            class="ckeditor-textarea border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
-            name="content" id="editor" placeholder="Escribe aquí..."
-            style="min-height: 200px; width: 200px;"></textarea>
 
-        <p class="bg-blue-300">Bienvenido</p>
-        <AdminPanel :usuarios="Usuarios" />
+        <carousel></carousel>
         <br>
 
-
-        <div id="default-carousel" class="relative w-full" data-carousel="slide">
-            <!-- Carousel wrapper -->
-            <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
-                <!-- Item 1 -->
-                <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                    <img src="../../../public/img/mas.png"
-                        class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                </div>
-                <!-- Item 2 -->
-                <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                    <img src="../../../public/img/logo.png"
-                        class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                </div>
-                <!-- Item 3 -->
-                <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                    <img src="../../../public/img/logo.png"
-                        class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                </div>
-                <!-- Item 4 -->
-                <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                    <img src="../../../public/img/logo.png"
-                        class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                </div>
-                <!-- Item 5 -->
-                <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                    <img src="../../../public/img/logo.png"
-                        class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                </div>
-            </div>
-            <!-- Slider indicators -->
-            <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
-                <button type="button" class="w-3 h-3 rounded-full" aria-current="true" aria-label="Slide 1"
-                    data-carousel-slide-to="0"></button>
-                <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 2"
-                    data-carousel-slide-to="1"></button>
-                <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 3"
-                    data-carousel-slide-to="2"></button>
-                <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 4"
-                    data-carousel-slide-to="3"></button>
-                <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 5"
-                    data-carousel-slide-to="4"></button>
-            </div>
-            <!-- Slider controls -->
-            <button type="button"
-                class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-                data-carousel-prev>
-                <span
-                    class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                    <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M5 1 1 5l4 4" />
-                    </svg>
-                    <span class="sr-only">Previous</span>
-                </span>
-            </button>
-            <button type="button"
-                class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-                data-carousel-next>
-                <span
-                    class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                    <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="m1 9 4-4-4-4" />
-                    </svg>
-                    <span class="sr-only">Next</span>
-                </span>
-            </button>
+        <div v-for="curso in Cursos" :curso.id class="text-center">
+            <h1 class="text-2xl font-bold mb-4">Lista de Cursos</h1>
+            <ul v-if="curso.length > 0">
+                <li v-for="curs in curso" :key="curs.id" class="mb-6">
+                    <h2 class="text-xl font-semibold">{{ curs.nombre }}</h2>
+                    <p><strong>Etapa:</strong> {{ curs.etapa }}</p>
+                    <p><strong>Descripción:</strong> {{ curs.descripcion }}</p>
+                </li>
+            </ul>
+            <p v-else>No hay cursos disponibles.</p>
         </div>
     </div>
+    <cookies></cookies>
 </template>
-
-<!-- <template>
-    <Navbar></navbar>
-    holaaaaaaaaa
-    <div>
-        <div v-for="usuario in usuarios" :key="usuario.id">
-            {{ usuario.nombre }}
-        </div>
-    </div>
-
-  
-
-</template> 
-
-<script setup>
-import { ref, defineProps, onMounted } from 'vue';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import Navbar from '@/Components/Navbar.vue';
-
-const props = defineProps({
-    usuarios: Array
-});
-
-onMounted(() => {
-    ClassicEditor
-        .create(document.querySelector('#editor'))
-        .catch(error => {
-            console.error(error);
-        });
-});
-</script> -->
