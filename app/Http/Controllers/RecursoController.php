@@ -76,4 +76,16 @@ class RecursoController extends Controller
             'recursos' => $recursos,
         ]);
     }
+
+    public function eliminarCurso($id)
+    {
+        try {
+            $curso = Recurso::findOrFail($id);
+            $curso->delete();
+
+            return response()->json(['message' => 'Recurso eliminado correctamente'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al eliminar el Recurso'], 500);
+        }
+    }
 }

@@ -70,3 +70,7 @@
         </button>
     </div>
 </template>
+
+<script setup>
+import { Carousel } from 'flowbite';
+</script>

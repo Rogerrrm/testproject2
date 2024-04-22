@@ -47,6 +47,7 @@ Route::post('/recursos', [RecursoController::class, 'guardar'])->name('recursos.
 Route::put('/recursos/{id}', [RecursoController::class, 'actualizar']);
 Route::post('/buscarcursosrecursos', [RecursoController::class, 'buscarCursosRecursos']);
 Route::get('/buscarcursosrecurso', [RecursoController::class, 'buscarCursosRecursos']);
+Route::delete('/recursos/{id}', [CursoController::class, 'eliminarCurso']);
 
 
 Route::get('/curs', [CursoController::class, 'buscar']);
