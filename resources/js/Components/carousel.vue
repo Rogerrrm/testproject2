@@ -1,14 +1,49 @@
 <template>
     <div class="carousel">
-        <div class="carousel-items">
-            <div class="carousel-item"><img src="../../../public/img/logo.jpg" alt=""></div>
-            <div class="carousel-item"><img src="../../../public/img/logo.jpg" alt=""></div>
-            <div class="carousel-item"><img src="../../../public/img/logo.jpg" alt=""></div>
+        <div class="carousel-items" ref="carousel">
+            <div class="carousel-item" v-for="item in items" :key="item.id">
+                <img :src="item.src" :alt="item.alt">
+            </div>
         </div>
-        <button onclick="previous()">Previous</button>
-        <button onclick="next()">Next</button>
+        <button @click="previous">Previous</button>
+        <button @click="next">Next</button>
     </div>
 </template>
+
+<script>
+export default {
+    data() {
+        return {
+            currentSlide: 0,
+            items: [
+                { id: 1, src: '../../../public/img/logo.jpg', alt: 'Logo 1' },
+                { id: 2, src: '../../../public/img/logo.jpg', alt: 'Logo 2' },
+                { id: 3, src: '../../../public/img/logo.jpg', alt: 'Logo 3' },
+            ]
+        };
+    },
+    methods: {
+        showSlide(index) {
+            const carousel = this.$refs.carousel;
+            if (carousel) {
+                carousel.style.transform = `translateX(-${index * 100}%)`;
+            }
+        },
+        next() {
+            this.currentSlide = (this.currentSlide + 1) % this.items.length;
+            this.showSlide(this.currentSlide);
+        },
+        previous() {
+            this.currentSlide = (this.currentSlide - 1 + this.items.length) % this.items.length;
+            this.showSlide(this.currentSlide);
+        }
+    },
+    mounted() {
+        this.showSlide(this.currentSlide);
+    }
+}
+</script>
+
 <style>
 .carousel-items {
     display: flex;
@@ -18,31 +53,5 @@
 
 .carousel-item {
     flex: 0 0 100%;
-    order: 1;
 }
 </style>
-<script>
-
-let currentSlide = 0;
-const items = document.querySelectorAll('.carousel-item');
-
-function showSlide(index) {
-    items.forEach((item, idx) => {
-        item.style.transform = `translateX(-${index * 100}%)`;
-    });
-}
-
-function next() {
-    currentSlide = (currentSlide + 1) % items.length;
-    showSlide(currentSlide);
-}
-
-function previous() {
-    currentSlide = (currentSlide - 1 + items.length) % items.length;
-    showSlide(currentSlide);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    showSlide(currentSlide);
-});
-</script>
