@@ -10,4 +10,14 @@ class Curso extends Model
     use HasFactory;
 
     protected $fillable = ['nombre', 'etapa', 'descripcion'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function recursos()
+    {
+        return $this->hasMany(Recurso::class);
+    }
 }

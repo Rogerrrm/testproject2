@@ -12,12 +12,13 @@ return new class extends Migration {
     {
         Schema::create('cursos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('nombre');
             $table->string('etapa');
-            $table->string("descripcion");
-            $table->rememberToken();
+            $table->text('descripcion');
             $table->timestamps();
         });
+
     }
 
     /**
