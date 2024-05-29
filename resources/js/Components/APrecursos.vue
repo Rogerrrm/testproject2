@@ -101,7 +101,7 @@ function showModal() {
 // Define la función eliminarCurso
 function eliminarCurso(id) {
     console.log('Eliminar curso con ID:', id);
-    axios.delete(`/cursos/${id}`)
+    axios.delete(`/recursos/${id}`)
         .then(response => {
             console.log(response.data.message);
         })

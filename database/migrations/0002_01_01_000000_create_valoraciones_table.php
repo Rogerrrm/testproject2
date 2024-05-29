@@ -10,13 +10,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('recursos', function (Blueprint $table) {
+        Schema::create('ratings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('curso_id')->constrained()->onDelete('cascade');
-            $table->string('titulo');
-            $table->text('contenido_html');
-            $table->enum('visibilidad', ['publico', 'privado'])->default('publico');
-            $table->integer('orden')->nullable();
+            $table->tinyInteger('rating')->unsigned();
+            $table->text('comment');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('restaurant_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('recursos');
+        Schema::dropIfExists('ratings');
     }
 };

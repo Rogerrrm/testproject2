@@ -10,13 +10,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('cursos', function (Blueprint $table) {
-            $table->id();
-            $table->string('nombre');
-            $table->string('etapa');
-            $table->string("descripcion");
-            $table->rememberToken();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('password')->nullable()->change();
+            $table->string('avatar')->nullable();
+            $table->string('external_id')->nullable();
+            $table->string('external_auth')->nullable();
         });
     }
 
@@ -25,5 +23,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::dropIfExists('events_intolerances');
     }
 };
