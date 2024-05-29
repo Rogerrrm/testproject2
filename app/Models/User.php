@@ -4,6 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -20,13 +21,13 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function cursos()
+    public function restaurantes(): HasMany
     {
-        return $this->hasMany(Curso::class);
+        return $this->hasMany(Restaurant::class);
     }
 
-    public function recursos()
+    public function ratings(): HasMany
     {
-        return $this->hasMany(Recurso::class);
+        return $this->hasMany(Rating::class);
     }
 }

@@ -10,15 +10,16 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('cursos', function (Blueprint $table) {
+        Schema::create('restaurants', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->text('description');
+            $table->decimal('latitude', 10, 8);
+            $table->decimal('longitude', 11, 8);
+            $table->unsignedTinyInteger('average_rating')->default(1);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('nombre');
-            $table->string('etapa');
-            $table->text('descripcion');
             $table->timestamps();
         });
-
     }
 
     /**
@@ -26,5 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::dropIfExists('restaurants');
     }
 };
