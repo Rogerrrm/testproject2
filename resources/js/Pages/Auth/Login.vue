@@ -34,7 +34,7 @@ const submit = () => {
     <GuestLayout>
         <div class="w-full flex justify-center ">
             <a href="/">
-                <JhoBotton class="mr-3">Tornar</JhoBotton>
+                <button class="mr-3">Tornar</button>
             </a>
         </div>
         <div>

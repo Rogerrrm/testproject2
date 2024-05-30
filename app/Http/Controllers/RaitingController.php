@@ -93,9 +93,13 @@ class RaitingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function obtenerComentariosRestaurante($restaurante_id)
     {
-        //
+        // Obtener todos los comentarios para el restaurante dado, incluyendo los nombres de usuario
+        $comentarios = Rating::with('user')->where('restaurant_id', $restaurante_id)->get();
+
+        // Devolver los comentarios como respuesta
+        return response()->json($comentarios);
     }
 
     /**
@@ -113,8 +117,8 @@ class RaitingController extends Controller
     {
         // Validar los datos de entrada
         $request->validate([
-            'rating' => 'required',
-            'comment' => 'required',
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string|max:255',
         ]);
 
         try {
@@ -126,6 +130,19 @@ class RaitingController extends Controller
                 'rating' => $request->rating,
                 'comment' => $request->comment,
             ]);
+
+            // Recuperar todas las valoraciones para este restaurante
+            $ratings = Rating::where('restaurant_id', $comentario->restaurant_id)->get();
+
+            // Calcular el nuevo promedio de valoración y redondear al entero más cercano
+            $totalRatings = $ratings->count();
+            $totalRatingSum = $ratings->sum('rating');
+            $averageRating = $totalRatings > 0 ? round($totalRatingSum / $totalRatings) : 0;
+
+            // Actualizar el promedio de valoración del restaurante
+            $restaurant = Restaurant::findOrFail($comentario->restaurant_id);
+            $restaurant->average_rating = $averageRating;
+            $restaurant->save();
 
             // Devolver una respuesta de éxito
             return response()->json(['message' => 'Comentario actualizado correctamente'], 200);
