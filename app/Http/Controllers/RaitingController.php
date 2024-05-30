@@ -56,39 +56,84 @@ class RaitingController extends Controller
 
 
 
+    // public function store(Request $request)
+    // {
+    //     // Validar los datos del formulario
+    //     $validatedData = $request->validate([
+    //         'rating' => 'required|integer|min:1|max:5',
+    //         'comment' => 'required|string|max:255',
+    //         // Asegúrate de que también recibes el ID del restaurante
+    //         'restaurant_id' => 'required|exists:restaurants,id',
+    //     ]);
+
+    //     // Crear una nueva calificación
+    //     $rating = new Rating();
+    //     $rating->rating = $validatedData['rating'];
+    //     $rating->comment = $validatedData['comment'];
+    //     $rating->user_id = auth()->id(); // Asigna el ID del usuario autenticado
+    //     $rating->restaurant_id = $validatedData['restaurant_id'];
+    //     $rating->save();
+
+    //     // Recuperar todas las valoraciones para este restaurante
+    //     $ratings = Rating::where('restaurant_id', $validatedData['restaurant_id'])->get();
+
+    //     // Calcular el nuevo promedio de valoración y redondear al entero más cercano
+    //     $totalRatings = $ratings->count();
+    //     $totalRatingSum = $ratings->sum('rating');
+    //     $averageRating = $totalRatings > 0 ? round($totalRatingSum / $totalRatings) : 0;
+
+    //     // Actualizar el promedio de valoración del restaurante
+    //     $restaurant = Restaurant::findOrFail($validatedData['restaurant_id']);
+    //     $restaurant->average_rating = $averageRating;
+    //     $restaurant->save();
+
+    //     return response()->json($rating, 201);
+    // }
+
     public function store(Request $request)
-    {
-        // Validar los datos del formulario
-        $validatedData = $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'required|string|max:255',
-            // Asegúrate de que también recibes el ID del restaurante
-            'restaurant_id' => 'required|exists:restaurants,id',
-        ]);
+{
+    // Validar los datos del formulario
+    $validatedData = $request->validate([
+        'rating' => 'required|integer|min:1|max:5',
+        'comment' => 'required|string|max:255',
+        // Asegúrate de que también recibes el ID del restaurante
+        'restaurant_id' => 'required|exists:restaurants,id',
+    ]);
 
-        // Crear una nueva calificación
-        $rating = new Rating();
-        $rating->rating = $validatedData['rating'];
-        $rating->comment = $validatedData['comment'];
-        $rating->user_id = auth()->id(); // Asigna el ID del usuario autenticado
-        $rating->restaurant_id = $validatedData['restaurant_id'];
-        $rating->save();
+    // Verificar si el usuario ya ha comentado en este restaurante
+    $existingRating = Rating::where('restaurant_id', $validatedData['restaurant_id'])
+                            ->where('user_id', auth()->id())
+                            ->first();
 
-        // Recuperar todas las valoraciones para este restaurante
-        $ratings = Rating::where('restaurant_id', $validatedData['restaurant_id'])->get();
-
-        // Calcular el nuevo promedio de valoración y redondear al entero más cercano
-        $totalRatings = $ratings->count();
-        $totalRatingSum = $ratings->sum('rating');
-        $averageRating = $totalRatings > 0 ? round($totalRatingSum / $totalRatings) : 0;
-
-        // Actualizar el promedio de valoración del restaurante
-        $restaurant = Restaurant::findOrFail($validatedData['restaurant_id']);
-        $restaurant->average_rating = $averageRating;
-        $restaurant->save();
-
-        return response()->json($rating, 201);
+    // Si el usuario ya ha comentado, devuelve un mensaje de error
+    if ($existingRating) {
+        return response()->json(['error' => 'Ya has comentado en este restaurante previamente'], 422);
     }
+
+    // Crear una nueva calificación
+    $rating = new Rating();
+    $rating->rating = $validatedData['rating'];
+    $rating->comment = $validatedData['comment'];
+    $rating->user_id = auth()->id(); // Asigna el ID del usuario autenticado
+    $rating->restaurant_id = $validatedData['restaurant_id'];
+    $rating->save();
+
+    // Recuperar todas las valoraciones para este restaurante
+    $ratings = Rating::where('restaurant_id', $validatedData['restaurant_id'])->get();
+
+    // Calcular el nuevo promedio de valoración y redondear al entero más cercano
+    $totalRatings = $ratings->count();
+    $totalRatingSum = $ratings->sum('rating');
+    $averageRating = $totalRatings > 0 ? round($totalRatingSum / $totalRatings) : 0;
+
+    // Actualizar el promedio de valoración del restaurante
+    $restaurant = Restaurant::findOrFail($validatedData['restaurant_id']);
+    $restaurant->average_rating = $averageRating;
+    $restaurant->save();
+
+    return response()->json($rating, 201);
+}
+
 
     /**
      * Display the specified resource.

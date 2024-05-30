@@ -1,9 +1,11 @@
 import { test, run } from 'vitest';
-import { Schema, Blueprint } from 'laravel-migration';
+import { Schema, Blueprint, Migration } from 'laravel-migration'; // Se importa Migration del paquete laravel-migration
 
 test('Migración de tabla restaurants', ({ assert }) => {
-    // Simular la migración
+    // Crear una instancia de Migration
     const migration = new Migration();
+
+    // Simular la migración
     migration.up();
 
     // Verificar si la tabla fue creada
