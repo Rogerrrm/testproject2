@@ -66,11 +66,10 @@ onMounted(() => {
 });
 
 </script>
-
 <template>
     <AuthenticatedLayout>
-        <div class="flex h-screen">
-            <div class="w-1/4 bg-blue-200 p-6">
+        <div class="flex flex-wrap min-h-screen">
+            <div class="w-full sm:w-1/2 lg:w-1/4 bg-cyan-200 p-6">
                 <h3>Crear Restaurante</h3>
                 <form @submit.prevent="submitForm">
                     <div class="mb-4">
@@ -95,17 +94,15 @@ onMounted(() => {
                 </form>
             </div>
 
-
-            <div class="w-2/4 bg-gray-200 p-6 overflow-y-auto" style="height: auto;">
+            <div class="w-full sm:w-1/2 lg:w-1/2 bg-cyan-200 p-6 overflow-y-auto">
                 Tus restaurantes
                 <div v-for="Restaurant in Restaurante" :key="Restaurant.id">
                     <CardRestaurante :Restaurant="Restaurant"></CardRestaurante>
                     <br>
                 </div>
-
             </div>
 
-            <div class="w-1/4 bg-blue-200 p-6 overflow-y-auto" style="height: auto;">
+            <div class="w-full sm:w-1/2 lg:w-1/4 bg-cyan-200 p-6 overflow-y-auto" style="height: 700px">
                 <h3>Tus comentarios</h3>
                 <div v-for="comentario in comentarios" :key="comentario.id">
                     <CardComentarios :comentario="comentario"></CardComentarios>
