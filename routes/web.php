@@ -49,12 +49,14 @@ Route::get('/inforestaurante/{id}', [RestaurantController::class, 'edit'])->name
 Route::delete('/deleterestaurante/{id}', [RestaurantController::class, 'delete'])->name('restaurante.delete');
 Route::put('/updaterestaurants/{id}', [RestaurantController::class, 'update'])->name('restaurante.delete');
 Route::get('/restaurant', [RestaurantController::class, 'index2']);
+Route::post('/api/restaurants', [RestaurantController::class, 'store']);
 
 
 Route::get('/comentarios', [RaitingController::class, 'index']);
 Route::post('/ratings', [RaitingController::class, 'store'])->name('ratings.store');
 Route::put('/editcomentarios/{id}', [RaitingController::class, 'update'])->name('ratings.update');
 Route::delete('/deletecomentarios/{id}', [RaitingController::class, 'delete'])->name('ratings.delete');
+Route::get('/comentarios_restaurante/{restaurante_id}', [RaitingController::class, 'obtenerComentariosRestaurante'])->name('obtenerComentariosRestaurante');
 
 
 Route::get('/dashboard', function () {
